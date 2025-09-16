@@ -9,7 +9,6 @@ import lombok.Getter;
 import java.time.LocalDate;
 
 @Data
-@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
 

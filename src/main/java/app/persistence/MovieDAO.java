@@ -13,9 +13,8 @@ public class MovieDAO {
         this.emf = emf;
     }
 
-    public Movie create (MovieDTO movieDTO) {
+    public Movie create (Movie movie) {
         try (EntityManager em = emf.createEntityManager()) {
-            Movie movie = MovieConverter.dtoToEntity(movieDTO);
 
             em.getTransaction().begin();
             em.persist(movie);

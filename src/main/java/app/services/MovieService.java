@@ -1,7 +1,6 @@
 package app.services;
 
 import app.dtos.*;
-import app.entities.Genre;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -11,6 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class MovieService {
     private final String apiKey = System.getenv("API_KEY");
@@ -142,14 +142,13 @@ public class MovieService {
     }
 
 
-    public List<ActorDTO> getAllActorsForMovie (List<CastAndCrewDTO> castAndCrewDTOList) {
 
-        return null;
-    }
+    public Optional<CrewDTO> getDirectorForMovie (CastAndCrewDTO castAndCrewDTO) {
+        Optional<CrewDTO> crewDTO = castAndCrewDTO.getCrew().stream()
+                .filter(movie -> movie.getJob().equalsIgnoreCase("Director"))
+                .findAny();
 
-    public CrewDTO getDirector (List<CastAndCrewDTO> castAndCrewDTOList) {
-
-        return null;
+        return crewDTO;
     }
 }
 
