@@ -1,5 +1,9 @@
 package app.config;
 
+import app.entities.Actor;
+import app.entities.Director;
+import app.entities.Genre;
+import app.entities.Movie;
 import app.utils.Utils;
 
 import jakarta.persistence.EntityManagerFactory;
@@ -30,7 +34,7 @@ public class HibernateConfig {
     }
 
     public static EntityManagerFactory getEntityManagerFactoryForTest() {
-        if (emfTest == null){
+        if (emfTest == null) {
             setTest(true);
             emfTest = createEMF(getTest());  // No DB needed for test
         }
@@ -39,7 +43,10 @@ public class HibernateConfig {
 
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
-        // configuration.addAnnotatedClass(Point.class);
+        configuration.addAnnotatedClass(Actor.class);
+        configuration.addAnnotatedClass(Director.class);
+        configuration.addAnnotatedClass(Genre.class);
+        configuration.addAnnotatedClass(Movie.class);
     }
 
     private static EntityManagerFactory createEMF(boolean forTest) {
@@ -64,8 +71,7 @@ public class HibernateConfig {
             SessionFactory sf = configuration.buildSessionFactory(serviceRegistry);
             EntityManagerFactory emf = sf.unwrap(EntityManagerFactory.class);
             return emf;
-        }
-        catch (Throwable ex) {
+        } catch (Throwable ex) {
             System.err.println("Initial SessionFactory creation failed." + ex);
             throw new ExceptionInInitializerError(ex);
         }
