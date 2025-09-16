@@ -1,6 +1,7 @@
 package app;
 
 import app.config.HibernateConfig;
+import app.dtos.CastAndCrewDTO;
 import app.dtos.MovieDTO;
 import app.dtos.MovieSearchResultDTO;
 import app.persistence.MovieDAO;
@@ -19,12 +20,19 @@ public class Main {
 
 
         List<MovieDTO> movies = new ArrayList<>();
-        movies = movieService.getAllDanishMovies();
+        // movies = movieService.getAllDanishMovies();
 
         //movies.forEach(System.out::println);
 
         // Alle film gemmes i DB
-        movies.forEach(movie -> movieDAO.create(movie));
+        //movies.forEach(movie -> movieDAO.create(movie));
+
+        // Alle genre hentes
+        //movieService.getAllGenres();
+
+        //Hent alle credits for 1 movie
+        CastAndCrewDTO c = movieService.getCastAndCrew(12);
+        System.out.println(c);
 
 
         emf.close();

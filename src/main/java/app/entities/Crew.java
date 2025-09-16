@@ -4,8 +4,6 @@ package app.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-
 @Getter
 @NoArgsConstructor //Til Hibernate
 @AllArgsConstructor //Til Builder
@@ -14,7 +12,7 @@ import java.util.HashSet;
 @EqualsAndHashCode
 
 @Entity
-public class Director {
+public class Crew {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -26,13 +24,15 @@ public class Director {
     private String name;
     private String originalName;
     private double popularity;
+    private String department;
+    private String job;
 
 /*
     //Relationer
     @Builder.Default //Sørger for at hashSet bliver initialiseret
     @ToString.Exclude //Undgår stackOverFlow-Error
     @EqualsAndHashCode.Exclude //Undgår stackOverFlow-Error
-    @OneToMany(mappedBy = "director") //Peger på director i Movie-klasse
+    @OneToMany(mappedBy = "crew") //Peger på director i Movie-klasse
     private HashSet<Movie> movies = new HashSet<>();
 
 

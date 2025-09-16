@@ -50,7 +50,7 @@ public class Movie {
 
     @ManyToOne
     @Cascade(CascadeType.PERSIST)
-    private Director director;
+    private Crew director;
 
 
  */
