@@ -7,7 +7,6 @@ import app.entities.Crew;
 import app.entities.Movie;
 import app.persistence.MovieDAO;
 import app.services.MovieService;
-import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.util.ArrayList;
@@ -20,6 +19,14 @@ public class Main {
         MovieService movieService = new MovieService();
         MovieDAO movieDAO = new MovieDAO(emf);
 
+
+
+        /* TODO
+            1. Få nedenstående ud af main
+            2. Tjek for duplicates af især Actors og Directors og fix
+            3. Lave DAO-metode til at gemme Genre
+
+         */
 
 
         // 1. Hent alle Movie
