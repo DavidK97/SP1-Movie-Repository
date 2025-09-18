@@ -24,7 +24,7 @@ public class Main {
 
 
         /* TODO
-            2. Tjek for duplicates af især Actors og Directors og fix
+            2. Fix duplicates af især Actors og Directors og fix
          */
 
 
@@ -76,8 +76,8 @@ public class Main {
 
             // Hver film gemmes i DB. Cascade.Persist sørger for Director og Actor bliver gemt
             movieDAO.create(movie);
-
         }
+
         emf.close();
     }
 }

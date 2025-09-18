@@ -15,6 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode
 
 @Entity
+@Table(name = "director")
 public class Director {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +23,18 @@ public class Director {
 
     private boolean adult;
     private int gender;
+
+    @Column(name = "tmdb_id")
     private int tmdbId;
+
+    @Column(name = "known_for_department")
     private String knownForDepartment;
+
     private String name;
+
+    @Column(name = "original_name")
     private String originalName;
+
     private double popularity;
     private String department;
     private String job;

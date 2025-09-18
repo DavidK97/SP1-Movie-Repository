@@ -79,7 +79,7 @@ public class HibernateConfig {
 
     private static Properties setBaseProperties(Properties props) {
         props.put("hibernate.connection.driver_class", "org.postgresql.Driver");
-        props.put("hibernate.hbm2ddl.auto", "create-drop");  // set to "update" when in production
+        props.put("hibernate.hbm2ddl.auto", "update");  // set to "update" when in production
         props.put("hibernate.current_session_context_class", "thread");
         props.put("hibernate.show_sql", "false");
         props.put("hibernate.format_sql", "false");
@@ -107,12 +107,10 @@ public class HibernateConfig {
 
     private static Properties setTestProperties(Properties props) {
         props.put("hibernate.connection.driver_class", "org.testcontainers.jdbc.ContainerDatabaseDriver");
-        props.put("hibernate.connection.url", "jdbc:tc:postgresql:15.3-alpine3.18:///test_db");
-        props.put("hibernate.connection.username", "postgres");
-        props.put("hibernate.connection.password", "postgres");
-        props.put("hibernate.archive.autodetection", "class");
-        props.put("hibernate.show_sql", "true");
-        props.put("hibernate.hbm2ddl.auto", "create-drop"); // update for production
+        props.put("hibernate.connection.url", "jdbc:tc:postgresql:16.2:///test_db");
+        props.put("hibernate.archive.autodetection", "hbm,class");
+        props.put("hibernate.show_sql", "false");
+        props.put("hibernate.hbm2ddl.auto", "create-drop");
         return props;
     }
 }

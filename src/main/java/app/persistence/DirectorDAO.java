@@ -1,22 +1,23 @@
 package app.persistence;
 
 import app.entities.Actor;
+import app.entities.Director;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 
-public class ActorDAO {
+public class DirectorDAO {
     private final EntityManagerFactory emf;
 
-    public ActorDAO(EntityManagerFactory emf) {
+    public DirectorDAO(EntityManagerFactory emf) {
         this.emf = emf;
     }
 
-    public Actor create(Actor actor) {
+    public Director create(Director director) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            em.persist(actor);
+            em.persist(director);
             em.getTransaction().commit();
-            return actor;
+            return director;
         }
     }
 }

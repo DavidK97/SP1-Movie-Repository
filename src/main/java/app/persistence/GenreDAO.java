@@ -25,17 +25,45 @@ public class GenreDAO {
         }
     }
 
+
+    public boolean delete (int id) {
+        try(EntityManager em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            int result = em.createQuery("DELETE FROM Genre g WHERE g.id = :id")
+                    .setParameter("id", id)
+                    .executeUpdate();
+            em.getTransaction().commit();
+
+            return result > 0;
+        }
+    }
+
+    public boolean updateName(int id, String name) {
+        try (EntityManager em = emf.createEntityManager()) {
+            em.getTransaction().begin();
+            int result = em.createQuery("UPDATE Genre g SET g.name = :name WHERE g.id = :id")
+                    .setParameter("name", name)
+                    .setParameter("id", id)
+                    .executeUpdate();
+            em.getTransaction().commit();
+            return result > 0;
+        }
+    }
+
+
+    public Genre findById (int id) {
+        try(EntityManager em = emf.createEntityManager()) {
+            Genre foundGenre = em.find(Genre.class, id);
+            return foundGenre;
+        }
+    }
+
     //Opgave 4.1
-
     public List<Genre> getAllGenres () {
-
-        return null;
+        try (EntityManager em = emf.createEntityManager()) {
+            List<Genre> allGenres = em.createQuery("SELECT g FROM Genre g", Genre.class)
+                    .getResultList();
+            return allGenres;
+        }
     }
-
-    //Opgave 4.2
-    public List<Movie> getMovieByGenre () {
-
-        return null;
-    }
-
 }

@@ -2,6 +2,7 @@ package app.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.NaturalId;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode
 
 @Entity
+@Table(name = "actor")
 public class Actor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +23,18 @@ public class Actor {
 
     private boolean adult;
     private int gender;
+
+    @Column(name = "tmdb_id")
     private int tmdbId;
+
+    @Column(name = "known_for_department")
     private String knownForDepartment;
+
     private String name;
+
+    @Column(name = "original_name")
     private String originalName;
+
     private double popularity;
 
 
