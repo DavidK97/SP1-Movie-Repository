@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor //Til Hibernate
@@ -26,16 +27,23 @@ public class Director {
     private String name;
     private String originalName;
     private double popularity;
+    private String department;
+    private String job;
 
-/*
+
     //Relationer
     @Builder.Default //Sørger for at hashSet bliver initialiseret
     @ToString.Exclude //Undgår stackOverFlow-Error
     @EqualsAndHashCode.Exclude //Undgår stackOverFlow-Error
     @OneToMany(mappedBy = "director") //Peger på director i Movie-klasse
-    private HashSet<Movie> movies = new HashSet<>();
+    @Setter
+    private Set<Movie> movies = new HashSet<>();
 
-
- */
     //Hjælpemetode
+    public void addMovie (Movie movie) {
+        this.movies.add(movie);
+        if(movie != null) {
+            movie.setDirector(this);
+        }
+    }
 }

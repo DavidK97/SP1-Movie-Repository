@@ -5,8 +5,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor //Til Hibernate
@@ -36,24 +36,34 @@ public class Movie {
     private double voteAverage;
     private int voteCount;
 
-/*
+
     //Relationer
+    @Setter
+    @Builder.Default
+    @Cascade(CascadeType.PERSIST)
+    @ManyToMany
+    private Set<Actor> actors = new HashSet<>();
+
+    @Setter
     @Builder.Default
     @ManyToMany
     @Cascade(CascadeType.PERSIST)
-    private HashSet<Actor> actors = new HashSet<>();
+    private Set<Genre> genres = new HashSet<>();
 
-    @Builder.Default
-    @ManyToMany
-    @Cascade(CascadeType.PERSIST)
-    private HashSet<Genre> genres = new HashSet<>();
-
+    @Setter
     @ManyToOne
     @Cascade(CascadeType.PERSIST)
     private Director director;
 
+    public void addActor (Actor actor) {
+        this.actors.add(actor);
+        if (actor != null) {
+            actor.getMovies().add(this);
+        }
+    }
 
- */
-
+    public void addGenre (Genre genre) {
+        this.genres.add(genre);
+    }
 
 }

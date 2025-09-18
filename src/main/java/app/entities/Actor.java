@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @NoArgsConstructor //Til Hibernate
@@ -26,16 +27,17 @@ public class Actor {
     private String originalName;
     private double popularity;
 
-    /*
 
     //Relationer
     @Builder.Default //Sørger for at hashSet bliver initialiseret
     @ToString.Exclude //Undgår stackOverFlow-Error
     @EqualsAndHashCode.Exclude //Undgår stackOverFlow-Error
     @ManyToMany(mappedBy = "actors") //Peger på Actor i Movie-klasse
-    HashSet<Movie> movies = new HashSet<>();
+            Set<Movie> movies = new HashSet<>();
 
 
-     */
     //Hjælpemetode
+    public void addMovie(Movie movie) {
+        this.movies.add(movie);
+    }
 }
