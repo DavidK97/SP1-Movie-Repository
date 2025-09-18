@@ -144,8 +144,8 @@ public class MovieService {
 
 
 
-    public Optional<CrewDTO> getDirectorForMovie (CastAndCrewDTO castAndCrewDTO) {
-        Optional<CrewDTO> crewDTO = castAndCrewDTO.getCrew().stream()
+    public Optional<DirectorDTO> getDirectorForMovie (CastAndCrewDTO castAndCrewDTO) {
+        Optional<DirectorDTO> crewDTO = castAndCrewDTO.getCrew().stream()
                 .filter(movie -> movie.getJob().equalsIgnoreCase("Director"))
                 .findAny();
 

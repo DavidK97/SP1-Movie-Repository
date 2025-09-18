@@ -2,14 +2,12 @@ package app;
 
 import app.config.HibernateConfig;
 import app.dtos.*;
-import app.entities.Actor;
 import app.entities.Director;
 import app.entities.Genre;
 import app.entities.Movie;
 import app.persistence.GenreDAO;
 import app.persistence.MovieDAO;
-import app.services.GenreConverter;
-import app.services.MovieService;
+import app.services.*;
 import jakarta.persistence.EntityManagerFactory;
 
 import java.util.ArrayList;
@@ -26,29 +24,26 @@ public class Main {
 
 
         /* TODO
-            1. Få nedenstående ud af main
             2. Tjek for duplicates af især Actors og Directors og fix
          */
 
 
         // 1. Hent alle Movie
-        List<MovieDTO> allMovieDTOs = new ArrayList<>();
-        allMovieDTOs = movieService.getAllDanishMovies();
+        List<MovieDTO> allMovieDTOs = movieService.getAllDanishMovies();
 
         // 2. Hent alle Genre
         List<GenreDTO> allGenresDTO = movieService.getAllGenres();
 
         // 3. Gem alle Genre
-        List<Genre> allGenresEntity = new ArrayList<>();
-
+        List<Genre> allGenresAsEntities = new ArrayList<>();
         for (GenreDTO dto : allGenresDTO) {
             Genre genre = GenreConverter.dtoToEntity(dto);
-            allGenresEntity.add(genre);
+            allGenresAsEntities.add(genre);
         }
-        allGenresEntity.forEach(g -> genreDAO.create(g));
+        allGenresAsEntities.forEach(genre -> genreDAO.create(genre));
 
 
-        //Relationer mellem Movie og Actor og Director sættes for hver Movie
+        //4. Relationer mellem Movie og Actor og Director sættes for hver Movie
         for (MovieDTO movieDTO : allMovieDTOs) {
             // 4.1 Hent castAndCrewDTO for hver film
             CastAndCrewDTO castAndCrewDTO = movieService.getCastAndCrew(movieDTO.getTmdbId());
@@ -57,70 +52,31 @@ public class Main {
             List<ActorDTO> actorsDTO = castAndCrewDTO.getActors();
 
             // 4.3 Hent CrewDTO director til hver film
-            Optional<CrewDTO> optionalDirector = movieService.getDirectorForMovie(castAndCrewDTO);
+            Optional<DirectorDTO> optionalDirector = movieService.getDirectorForMovie(castAndCrewDTO);
 
+            // 5. Map hver MovieDTO til en Entity
+            Movie movie = MovieConverter.dtoToEntity(movieDTO);
 
-            //Map det hele til entities
-            Movie movie = Movie.builder()
-                    .tmdbId(movieDTO.getTmdbId())
-                    .adult(movieDTO.isAdult())
-                    .title(movieDTO.getTitle())
-                    .originalLanguage(movieDTO.getOriginalLanguage())
-                    .originalTitle(movieDTO.getOriginalTitle())
-                    .releaseDate(movieDTO.getReleaseDate())
-                    .title(movieDTO.getTitle())
-                    .voteAverage(movieDTO.getVoteAverage())
-                    .voteCount(movieDTO.getVoteCount())
-                    .popularity(movieDTO.getPopularity())
-                    .overview(movieDTO.getOverview())
-                    .build();
+            // 6. Alle ActorDTOs mappes til Entities og tilføjes til deres film
+            actorsDTO.forEach(actorDTO -> movie.addActor(ActorConverter.dtoToEntity(actorDTO)));
 
-
-            List<Genre> allGenresEntity2 = new ArrayList<>();
-            for (GenreDTO dto : allGenresDTO) {
-                Genre genre = GenreConverter.dtoToEntity(dto);
-                allGenresEntity2.add(genre);
-            }
-
-            for (Integer genreTMDBId : movieDTO.getGenreIds()) {
-                allGenresEntity2.stream()
-                        .filter(g -> g.getTmdbId() == genreTMDBId)
-                        .findFirst()
-                        .ifPresent(movie::addGenre);
-            }
-
-
+            // 7. Der tilføjes en Director til en film
             if (optionalDirector.isPresent()) {
-                Director director = Director.builder()
-                        .name(optionalDirector.get().getName())
-                        .adult(optionalDirector.get().isAdult())
-                        .gender(optionalDirector.get().getGender())
-                        .tmdbId(optionalDirector.get().getTmdbId())
-                        .knownForDepartment(optionalDirector.get().getKnownForDepartment())
-                        .originalName(optionalDirector.get().getOriginalName())
-                        .popularity(optionalDirector.get().getPopularity())
-                        .department(optionalDirector.get().getDepartment())
-                        .job(optionalDirector.get().getJob())
-                        .build();
+                DirectorDTO directorDTO = optionalDirector.get();
+                Director director = DirectorConverter.dtoToEntity(directorDTO);
 
                 director.addMovie(movie);
             }
 
-            for (ActorDTO actorDTO : actorsDTO) {
-                Actor actor = Actor.builder()
-                        .name(actorDTO.getName())
-                        .adult(actorDTO.isAdult())
-                        .gender(actorDTO.getGender())
-                        .tmdbId(actorDTO.getTmdbId())
-                        .knownForDepartment(actorDTO.getKnownForDepartment())
-                        .originalName(actorDTO.getOriginalName())
-                        .popularity(actorDTO.getPopularity())
-                        .build();
-                movie.addActor(actor);
-            }
+            // 8. Hvert genreTMDBid som en film har laver vi en relation til en genre med
+            allGenresAsEntities.stream()
+                    .filter(genre -> movieDTO.getGenreIds().contains(genre.getTmdbId()))
+                    .forEach(genre -> movie.addGenre(genre));
 
-            // 5. Gem alle film i DB. Cascade.Persist sørger for Director og Actor bliver gemt
+
+            // Hver film gemmes i DB. Cascade.Persist sørger for Director og Actor bliver gemt
             movieDAO.create(movie);
+
         }
         emf.close();
     }

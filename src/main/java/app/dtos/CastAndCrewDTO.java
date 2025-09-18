@@ -15,5 +15,5 @@ public class CastAndCrewDTO {
     private List<ActorDTO> actors;
 
     @JsonProperty("crew")
-    private List<CrewDTO> crew;
+    private List<DirectorDTO> crew;
 }

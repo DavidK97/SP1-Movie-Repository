@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CrewDTO {
+public class DirectorDTO {
     private boolean adult;
     private int gender;
 

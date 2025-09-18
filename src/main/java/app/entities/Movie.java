@@ -47,7 +47,6 @@ public class Movie {
     @Setter
     @Builder.Default
     @ManyToMany
-    @Cascade(CascadeType.PERSIST)
     private Set<Genre> genres = new HashSet<>();
 
     @Setter
