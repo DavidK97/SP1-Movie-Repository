@@ -1,14 +1,11 @@
 package app.entities;
-import app.dtos.CrewDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -56,13 +53,17 @@ public class Movie {
     @Setter
     @ManyToOne
     @Cascade(CascadeType.PERSIST)
-    private Crew director;
+    private Director director;
 
     public void addActor (Actor actor) {
         this.actors.add(actor);
         if (actor != null) {
             actor.getMovies().add(this);
         }
+    }
+
+    public void addGenre (Genre genre) {
+        this.genres.add(genre);
     }
 
 }

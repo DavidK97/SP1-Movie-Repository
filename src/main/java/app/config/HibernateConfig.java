@@ -1,7 +1,7 @@
 package app.config;
 
 import app.entities.Actor;
-import app.entities.Crew;
+import app.entities.Director;
 import app.entities.Genre;
 import app.entities.Movie;
 import app.utils.Utils;
@@ -44,7 +44,7 @@ public class HibernateConfig {
     // TODO: IMPORTANT: Add Entity classes here for them to be registered with Hibernate
     private static void getAnnotationConfiguration(Configuration configuration) {
         configuration.addAnnotatedClass(Actor.class);
-        configuration.addAnnotatedClass(Crew.class);
+        configuration.addAnnotatedClass(Director.class);
         configuration.addAnnotatedClass(Genre.class);
         configuration.addAnnotatedClass(Movie.class);
     }
@@ -79,7 +79,7 @@ public class HibernateConfig {
 
     private static Properties setBaseProperties(Properties props) {
         props.put("hibernate.connection.driver_class", "org.postgresql.Driver");
-        props.put("hibernate.hbm2ddl.auto", "create");  // set to "update" when in production
+        props.put("hibernate.hbm2ddl.auto", "create-drop");  // set to "update" when in production
         props.put("hibernate.current_session_context_class", "thread");
         props.put("hibernate.show_sql", "false");
         props.put("hibernate.format_sql", "false");

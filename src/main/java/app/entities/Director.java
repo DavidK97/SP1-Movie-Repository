@@ -15,7 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode
 
 @Entity
-public class Crew {
+public class Director {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

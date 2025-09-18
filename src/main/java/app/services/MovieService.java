@@ -9,6 +9,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,6 +150,40 @@ public class MovieService {
                 .findAny();
 
         return crewDTO;
+    }
+
+    public double getAverageForAllMovies() {
+        return getAllDanishMovies().stream()
+                .filter(m -> m.getVoteCount() > 0)
+                .mapToDouble(MovieDTO::getVoteAverage)
+                .average()
+                .orElse(0.0);
+    }
+
+    // boolean true = top 10, false = bottom 10
+    public List<MovieDTO> getTopTenMovies(boolean topTen) {
+        Comparator<MovieDTO> comparator = Comparator.comparingDouble(MovieDTO::getVoteAverage);
+
+        if (topTen) {
+            comparator = comparator.reversed();
+        }
+
+        return getAllDanishMovies().stream()
+                .filter(m -> m.getVoteAverage() > 0 && m.getVoteCount() > 0)
+                .sorted(comparator)
+                .limit(10)
+                .toList();
+    }
+
+    public List<MovieDTO> getMostPopularMovies(){
+        Comparator<MovieDTO> comparator = Comparator.comparingDouble(MovieDTO::getPopularity);
+
+        return getAllDanishMovies().stream()
+                .filter(m -> m.getPopularity() > 0)
+                //.mapToDouble(MovieDTO::getPopularity)
+                .sorted(comparator.reversed())
+                .limit(10)
+                .toList();
     }
 }
 

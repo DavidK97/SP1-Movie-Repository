@@ -3,9 +3,12 @@ package app;
 import app.config.HibernateConfig;
 import app.dtos.*;
 import app.entities.Actor;
-import app.entities.Crew;
+import app.entities.Director;
+import app.entities.Genre;
 import app.entities.Movie;
+import app.persistence.GenreDAO;
 import app.persistence.MovieDAO;
+import app.services.GenreConverter;
 import app.services.MovieService;
 import jakarta.persistence.EntityManagerFactory;
 
@@ -18,14 +21,13 @@ public class Main {
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
         MovieService movieService = new MovieService();
         MovieDAO movieDAO = new MovieDAO(emf);
+        GenreDAO genreDAO = new GenreDAO(emf);
 
 
 
         /* TODO
             1. Få nedenstående ud af main
             2. Tjek for duplicates af især Actors og Directors og fix
-            3. Lave DAO-metode til at gemme Genre
-
          */
 
 
@@ -34,12 +36,19 @@ public class Main {
         allMovieDTOs = movieService.getAllDanishMovies();
 
         // 2. Hent alle Genre
-        movieService.getAllGenres();
+        List<GenreDTO> allGenresDTO = movieService.getAllGenres();
 
         // 3. Gem alle Genre
-        //TODO Mangler DAO-metode
+        List<Genre> allGenresEntity = new ArrayList<>();
+
+        for (GenreDTO dto : allGenresDTO) {
+            Genre genre = GenreConverter.dtoToEntity(dto);
+            allGenresEntity.add(genre);
+        }
+        allGenresEntity.forEach(g -> genreDAO.create(g));
 
 
+        //Relationer mellem Movie og Actor og Director sættes for hver Movie
         for (MovieDTO movieDTO : allMovieDTOs) {
             // 4.1 Hent castAndCrewDTO for hver film
             CastAndCrewDTO castAndCrewDTO = movieService.getCastAndCrew(movieDTO.getTmdbId());
@@ -53,6 +62,7 @@ public class Main {
 
             //Map det hele til entities
             Movie movie = Movie.builder()
+                    .tmdbId(movieDTO.getTmdbId())
                     .adult(movieDTO.isAdult())
                     .title(movieDTO.getTitle())
                     .originalLanguage(movieDTO.getOriginalLanguage())
@@ -62,11 +72,26 @@ public class Main {
                     .voteAverage(movieDTO.getVoteAverage())
                     .voteCount(movieDTO.getVoteCount())
                     .popularity(movieDTO.getPopularity())
+                    .overview(movieDTO.getOverview())
                     .build();
 
 
+            List<Genre> allGenresEntity2 = new ArrayList<>();
+            for (GenreDTO dto : allGenresDTO) {
+                Genre genre = GenreConverter.dtoToEntity(dto);
+                allGenresEntity2.add(genre);
+            }
+
+            for (Integer genreTMDBId : movieDTO.getGenreIds()) {
+                allGenresEntity2.stream()
+                        .filter(g -> g.getTmdbId() == genreTMDBId)
+                        .findFirst()
+                        .ifPresent(movie::addGenre);
+            }
+
+
             if (optionalDirector.isPresent()) {
-                Crew director = Crew.builder()
+                Director director = Director.builder()
                         .name(optionalDirector.get().getName())
                         .adult(optionalDirector.get().isAdult())
                         .gender(optionalDirector.get().getGender())
@@ -94,39 +119,9 @@ public class Main {
                 movie.addActor(actor);
             }
 
-
             // 5. Gem alle film i DB. Cascade.Persist sørger for Director og Actor bliver gemt
             movieDAO.create(movie);
         }
-
-
-
-
-
-        /*
-        List<MovieDTO> movies = new ArrayList<>();
-        // movies = movieService.getAllDanishMovies();
-
-        //movies.forEach(System.out::println);
-
-        // Alle film gemmes i DB
-        //movies.forEach(movie -> movieDAO.create(movie));
-
-        // Alle genre hentes
-        //movieService.getAllGenres();
-
-        //Hent alle credits for 1 movie
-        CastAndCrewDTO c = movieService.getCastAndCrew(12);
-
-        //Test af director
-        Optional<CrewDTO> director = movieService.getDirectorForMovie(c);
-        System.out.println("----------------- Director: -------------------" + director);
-
-        //System.out.println(c);
-
-         */
-
-
         emf.close();
     }
 }
