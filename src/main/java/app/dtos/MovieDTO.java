@@ -7,9 +7,10 @@ import lombok.Data;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Data
-@Getter
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MovieDTO {
 
@@ -38,4 +39,7 @@ public class MovieDTO {
 
     @JsonProperty("vote_count")
     private int voteCount;
+
+    @JsonProperty("genre_ids")
+    private List<Integer> genreIds;
 }

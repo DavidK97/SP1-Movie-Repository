@@ -7,14 +7,17 @@ public class MovieConverter {
 
     public static Movie dtoToEntity (MovieDTO movieDTO) {
         Movie movie = Movie.builder()
+                .tmdbId(movieDTO.getTmdbId())
+                .adult(movieDTO.isAdult())
                 .title(movieDTO.getTitle())
                 .originalLanguage(movieDTO.getOriginalLanguage())
                 .originalTitle(movieDTO.getOriginalTitle())
-                .overview(movieDTO.getOverview())
-                .popularity(movieDTO.getPopularity())
                 .releaseDate(movieDTO.getReleaseDate())
-                .tmdbId(movieDTO.getTmdbId())
+                .title(movieDTO.getTitle())
+                .voteAverage(movieDTO.getVoteAverage())
                 .voteCount(movieDTO.getVoteCount())
+                .popularity(movieDTO.getPopularity())
+                .overview(movieDTO.getOverview())
                 .build();
         return movie;
     }
