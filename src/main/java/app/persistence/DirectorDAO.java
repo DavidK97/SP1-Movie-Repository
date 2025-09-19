@@ -20,4 +20,16 @@ public class DirectorDAO {
             return director;
         }
     }
+
+    public Director findDirectorByTmdbId(int tmdbId) {
+        try (EntityManager em = emf.createEntityManager()) {
+            Director foundDirector = em.createQuery("SELECT d FROM Director d WHERE d.tmdbId = :tmdbId", Director.class)
+                    .setParameter("tmdbId", tmdbId)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            return foundDirector;
+        }
+    }
 }

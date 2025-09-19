@@ -24,7 +24,7 @@ public class Actor {
     private boolean adult;
     private int gender;
 
-    @Column(name = "tmdb_id")
+    @Column(name = "tmdb_id", unique = true)
     private int tmdbId;
 
     @Column(name = "known_for_department")

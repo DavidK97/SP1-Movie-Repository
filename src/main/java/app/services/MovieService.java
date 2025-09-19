@@ -1,6 +1,7 @@
 package app.services;
 
 import app.dtos.*;
+import app.entities.Movie;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -185,5 +186,6 @@ public class MovieService {
                 .limit(10)
                 .toList();
     }
+
 }
 

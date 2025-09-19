@@ -1,9 +1,8 @@
 package app.entities;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.CascadeType;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -26,7 +25,7 @@ public class Movie {
 
     private boolean adult;
 
-    @Column(name = "tmdb_id")
+    @Column(name = "tmdb_id", unique = true)
     private int tmdbId;
 
     @Column(name = "original_language")
@@ -55,8 +54,7 @@ public class Movie {
     //Relationer
     @Setter
     @Builder.Default
-    @Cascade(CascadeType.PERSIST)
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Actor> actors = new HashSet<>();
 
     @Setter
@@ -65,9 +63,7 @@ public class Movie {
     private Set<Genre> genres = new HashSet<>();
 
     @Setter
-    @ManyToOne
-    @Cascade(CascadeType.PERSIST)
-
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Director director;
 
     public void addActor (Actor actor) {
