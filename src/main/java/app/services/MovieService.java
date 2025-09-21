@@ -169,6 +169,7 @@ public class MovieService {
         return crewDTO;
     }
 
+
     public double getAverageForAllMovies() {
         return getAllDanishMovies().stream()
                 .filter(m -> m.getVoteCount() > 0)
