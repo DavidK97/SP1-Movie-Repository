@@ -147,4 +147,41 @@ public class MovieDAO {
             em.close();
         }
     }
+
+    // Giv altid et tal tilbage (og lad 0 stemmer være med)
+    public double getAverageForAllMovies() {
+        try (EntityManager em = emf.createEntityManager()) {
+            Double avg = em.createQuery(
+                            "SELECT AVG(m.voteAverage) FROM Movie m WHERE m.voteCount > 0",
+                            Double.class)
+                    .getSingleResult();
+            return avg != null ? avg : 0.0;
+        }
+    }
+
+    // Mindre stramt filter så du faktisk får noget ud
+    public List<Movie> getTopTenMovies(boolean topTen) {
+        String direction = topTen ? "DESC" : "ASC";
+        try (EntityManager em = emf.createEntityManager()) {
+            return em.createQuery(
+                            "SELECT m FROM Movie m " +
+                                    "WHERE m.voteCount >= 0 " +
+                                    "ORDER BY m.voteAverage " + direction,
+                            Movie.class)
+                    .setMaxResults(10)
+                    .getResultList();
+        }
+    }
+
+    public List<Movie> getMostPopularMovies() {
+        try (EntityManager em = emf.createEntityManager()) {
+            return em.createQuery(
+                            "SELECT m FROM Movie m " +
+                                    "WHERE m.popularity > 0 " +
+                                    "ORDER BY m.popularity DESC",
+                            Movie.class)
+                    .setMaxResults(10)
+                    .getResultList();
+        }
+    }
 }

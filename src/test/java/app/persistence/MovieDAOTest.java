@@ -138,4 +138,40 @@ class MovieDAOTest {
         assertEquals(movies.size(), actual1);
         assertEquals(movies2.size(), actual2);
     }
+
+    @Test
+    void getAverageForAllMovies() {
+        double avg = movieDAO.getAverageForAllMovies();
+        assertTrue(avg >= 0.0);
+    }
+
+    @Test
+    void getTopTenMovies_desc() {
+        List<Movie> top = movieDAO.getTopTenMovies(true);
+        assertFalse(top.isEmpty());
+        assertTrue(top.size() <= 10);
+        for (int i = 1; i < top.size(); i++) {
+            assertTrue(top.get(i - 1).getVoteAverage() >= top.get(i).getVoteAverage());
+        }
+    }
+
+    @Test
+    void getTopTenMovies_asc() {
+        List<Movie> bottom = movieDAO.getTopTenMovies(false);
+        assertFalse(bottom.isEmpty());
+        assertTrue(bottom.size() <= 10);
+        for (int i = 1; i < bottom.size(); i++) {
+            assertTrue(bottom.get(i - 1).getVoteAverage() <= bottom.get(i).getVoteAverage());
+        }
+    }
+
+    @Test
+    void getMostPopularMovies() {
+        List<Movie> popular = movieDAO.getMostPopularMovies();
+        assertFalse(popular.isEmpty());
+        assertTrue(popular.size() <= 10);
+        for (int i = 1; i < popular.size(); i++) {
+            assertTrue(popular.get(i - 1).getPopularity() >= popular.get(i).getPopularity());
+        }
+    }
 }
