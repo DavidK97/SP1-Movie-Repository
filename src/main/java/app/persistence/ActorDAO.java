@@ -51,5 +51,17 @@ public class ActorDAO {
                 .setParameter("id", tmdbId)
                 .getResultList();
         return list.isEmpty() ? null : list.get(0);
+
+    public Actor findActorByImdbId(int tmdbId) {
+        try (EntityManager em = emf.createEntityManager()) {
+
+            Actor foundActor = em.createQuery("SELECT a FROM Actor a WHERE a.tmdbId = :tmdbId", Actor.class)
+                    .setParameter("tmdbId", tmdbId)
+                    .getResultStream()
+                    .findFirst()
+                    .orElse(null);
+
+            return foundActor;
+        }
     }
 }

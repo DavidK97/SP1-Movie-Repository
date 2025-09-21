@@ -3,6 +3,10 @@ package app.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.CascadeType;
+
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,6 +29,7 @@ public class Movie {
 
     // ✅ gør film unik på TMDb-id
     @Column(name = "tmdb_id", unique = true, nullable = false)
+
     private int tmdbId;
 
     @Column(name = "original_language")
@@ -51,13 +56,14 @@ public class Movie {
 
     // Relationer
     @Builder.Default
-    @ManyToMany
+
     @JoinTable(
             name = "movie_actor",
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
     @ToString.Exclude @EqualsAndHashCode.Exclude
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Actor> actors = new HashSet<>();
 
     @Builder.Default
@@ -70,8 +76,9 @@ public class Movie {
     @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<Genre> genres = new HashSet<>();
 
-    @ManyToOne
     @JoinColumn(name = "director_id")
+    @Setter
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Director director;
 
     public void addActor(Actor actor) {

@@ -23,6 +23,7 @@ public class Actor {
     private int gender;
 
     @Column(name = "tmdb_id", unique = true, nullable = false)
+
     private int tmdbId;
 
     @Column(name = "known_for_department")
