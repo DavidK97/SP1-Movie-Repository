@@ -1,6 +1,5 @@
 package app.entities;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,12 +7,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@NoArgsConstructor //Til Hibernate
-@AllArgsConstructor //Til Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @EqualsAndHashCode
-
 @Entity
 @Table(name = "director")
 public class Director {
@@ -24,7 +22,7 @@ public class Director {
     private boolean adult;
     private int gender;
 
-    @Column(name = "tmdb_id")
+    @Column(name = "tmdb_id", unique = true, nullable = false)
     private int tmdbId;
 
     @Column(name = "known_for_department")
@@ -39,20 +37,15 @@ public class Director {
     private String department;
     private String job;
 
-
-    //Relationer
-    @Builder.Default //Sørger for at hashSet bliver initialiseret
-    @ToString.Exclude //Undgår stackOverFlow-Error
-    @EqualsAndHashCode.Exclude //Undgår stackOverFlow-Error
-    @OneToMany(mappedBy = "director") //Peger på director i Movie-klasse
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "director")
     @Setter
     private Set<Movie> movies = new HashSet<>();
 
-    //Hjælpemetode
-    public void addMovie (Movie movie) {
+    public void addMovie(Movie movie) {
         this.movies.add(movie);
-        if(movie != null) {
-            movie.setDirector(this);
-        }
+        if (movie != null) movie.setDirector(this);
     }
 }

@@ -2,18 +2,16 @@ package app.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.NaturalId;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@NoArgsConstructor //Til Hibernate
-@AllArgsConstructor //Til Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @EqualsAndHashCode
-
 @Entity
 @Table(name = "actor")
 public class Actor {
@@ -24,7 +22,8 @@ public class Actor {
     private boolean adult;
     private int gender;
 
-    @Column(name = "tmdb_id", unique = true)
+    @Column(name = "tmdb_id", unique = true, nullable = false)
+
     private int tmdbId;
 
     @Column(name = "known_for_department")
@@ -37,16 +36,12 @@ public class Actor {
 
     private double popularity;
 
+    @Builder.Default
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "actors")
+    private Set<Movie> movies = new HashSet<>();
 
-    //Relationer
-    @Builder.Default //Sørger for at hashSet bliver initialiseret
-    @ToString.Exclude //Undgår stackOverFlow-Error
-    @EqualsAndHashCode.Exclude //Undgår stackOverFlow-Error
-    @ManyToMany(mappedBy = "actors") //Peger på Actor i Movie-klasse
-            Set<Movie> movies = new HashSet<>();
-
-
-    //Hjælpemetode
     public void addMovie(Movie movie) {
         this.movies.add(movie);
     }

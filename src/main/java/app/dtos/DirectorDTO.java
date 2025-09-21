@@ -13,7 +13,7 @@ public class DirectorDTO {
     @JsonProperty("id")
     private int tmdbId;
 
-    @JsonProperty("know_for_department")
+    @JsonProperty("known_for_department")
     private String knownForDepartment;
 
     private String name;
