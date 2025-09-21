@@ -4,12 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor //Til Hibernate
-@AllArgsConstructor //Til Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @EqualsAndHashCode
-
 @Entity
 @Table(name = "genre")
 public class Genre {
