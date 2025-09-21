@@ -1,22 +1,19 @@
 package app.entities;
+
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.Fetch;
 
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@NoArgsConstructor //Til Hibernate
-@AllArgsConstructor //Til Builder
+@NoArgsConstructor // Til Hibernate
+@AllArgsConstructor // Til Builder
 @Builder
 @ToString
 @EqualsAndHashCode
 @Setter
-
 @Entity
 @Table(name = "movie")
 public class Movie {
@@ -26,7 +23,8 @@ public class Movie {
 
     private boolean adult;
 
-    @Column(name = "tmdb_id")
+    // ✅ gør film unik på TMDb-id
+    @Column(name = "tmdb_id", unique = true, nullable = false)
     private int tmdbId;
 
     @Column(name = "original_language")
@@ -51,34 +49,39 @@ public class Movie {
     @Column(name = "vote_count")
     private int voteCount;
 
-
-    //Relationer
-    @Setter
+    // Relationer
     @Builder.Default
-    @Cascade(CascadeType.PERSIST)
     @ManyToMany
+    @JoinTable(
+            name = "movie_actor",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "actor_id")
+    )
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<Actor> actors = new HashSet<>();
 
-    @Setter
     @Builder.Default
     @ManyToMany
+    @JoinTable(
+            name = "movie_genre",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    @ToString.Exclude @EqualsAndHashCode.Exclude
     private Set<Genre> genres = new HashSet<>();
 
-    @Setter
     @ManyToOne
-    @Cascade(CascadeType.PERSIST)
-
+    @JoinColumn(name = "director_id")
     private Director director;
 
-    public void addActor (Actor actor) {
+    public void addActor(Actor actor) {
         this.actors.add(actor);
         if (actor != null) {
             actor.getMovies().add(this);
         }
     }
 
-    public void addGenre (Genre genre) {
+    public void addGenre(Genre genre) {
         this.genres.add(genre);
     }
-
 }

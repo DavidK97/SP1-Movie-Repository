@@ -4,12 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
-@NoArgsConstructor //Til Hibernate
-@AllArgsConstructor //Til Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @ToString
 @EqualsAndHashCode
-
 @Entity
 @Table(name = "genre")
 public class Genre {
@@ -17,7 +16,7 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "tmdb_id")
+    @Column(name = "tmdb_id", unique = true, nullable = false)
     private int tmdbId;
 
     private String name;
