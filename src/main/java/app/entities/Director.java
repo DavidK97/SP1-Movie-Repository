@@ -22,7 +22,7 @@ public class Director {
     private boolean adult;
     private int gender;
 
-    @Column(name = "tmdb_id", unique = true, nullable = false)
+    @Column(name = "tmdb_id", nullable = false)
     private int tmdbId;
 
     @Column(name = "known_for_department")

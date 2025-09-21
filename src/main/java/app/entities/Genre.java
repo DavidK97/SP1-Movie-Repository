@@ -16,7 +16,7 @@ public class Genre {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "tmdb_id", unique = true, nullable = false)
+    @Column(name = "tmdb_id")
     private int tmdbId;
 
     private String name;

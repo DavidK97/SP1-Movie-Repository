@@ -54,16 +54,4 @@ public class DirectorDAO {
                 .getResultList();
         return list.isEmpty() ? null : list.get(0);
     }
-
-    public Director findDirectorByTmdbId(int tmdbId) {
-        try (EntityManager em = emf.createEntityManager()) {
-            Director foundDirector = em.createQuery("SELECT d FROM Director d WHERE d.tmdbId = :tmdbId", Director.class)
-                    .setParameter("tmdbId", tmdbId)
-                    .getResultStream()
-                    .findFirst()
-                    .orElse(null);
-
-            return foundDirector;
-        }
-    }
 }
