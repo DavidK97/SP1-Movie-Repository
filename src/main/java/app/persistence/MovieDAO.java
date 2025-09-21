@@ -20,6 +20,17 @@ public class MovieDAO {
     }
 
 
+    public Movie findById(int id) {
+        try (EntityManager em = emf.createEntityManager()) {
+            Movie foundMovie = em.find(Movie.class, id);
+            return foundMovie;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+
     public Movie create(Movie movie) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
@@ -66,17 +77,13 @@ public class MovieDAO {
     public Movie merge(Movie movie) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            em.merge(movie);
+            Movie mergedMovie = em.merge(movie);
             em.getTransaction().commit();
 
-            return movie;
-        }
-    }
-
-    public Movie findById(int id) {
-        try (EntityManager em = emf.createEntityManager()) {
-            Movie foundMovie = em.find(Movie.class, id);
-            return foundMovie;
+            return mergedMovie;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

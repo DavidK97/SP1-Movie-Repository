@@ -2,6 +2,7 @@ package app.services;
 
 import app.dtos.*;
 import app.entities.Movie;
+import app.persistence.MovieDAO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -16,6 +17,11 @@ import java.util.Optional;
 
 public class MovieService {
     private final String apiKey = System.getenv("API_KEY");
+    private MovieDAO movieDAO;
+
+    public MovieService(MovieDAO movieDAO) {
+        this.movieDAO = movieDAO;
+    }
 
     public List<MovieDTO> getAllDanishMovies() {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -106,8 +112,7 @@ public class MovieService {
     }
 
 
-
-    public CastAndCrewDTO getCastAndCrew (int movieId) {
+    public CastAndCrewDTO getCastAndCrew(int movieId) {
         ObjectMapper objectMapper = new ObjectMapper();
 
         CastAndCrewDTO castAndCrewDTO = null;
@@ -118,7 +123,7 @@ public class MovieService {
 
             // Create a request with builder-pattern
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URI("https://api.themoviedb.org/3/movie/"+ movieId + "/credits?" +
+                    .uri(new URI("https://api.themoviedb.org/3/movie/" + movieId + "/credits?" +
                             "api_key=" + apiKey +
                             "&language=en-US"))
                     .GET()
@@ -141,6 +146,20 @@ public class MovieService {
             e.printStackTrace();
         }
         return castAndCrewDTO;
+    }
+
+
+    public Movie getMovieById(int id) {
+        try {
+            Movie movie = movieDAO.findById(id);
+            if (movie == null) {
+                System.out.println("Movie med id: " + id + "findes ikke i databasen");
+            }
+            return movie;
+        } catch (RuntimeException e) {
+            System.out.println("Noget gik galt ved hentning af film: " + e.getMessage());
+            return null;
+        }
     }
 
 
