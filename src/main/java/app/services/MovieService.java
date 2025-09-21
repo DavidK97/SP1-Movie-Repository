@@ -19,9 +19,6 @@ public class MovieService {
     private final String apiKey = System.getenv("API_KEY");
     private MovieDAO movieDAO;
 
-    public MovieService(MovieDAO movieDAO) {
-        this.movieDAO = movieDAO;
-    }
 
     public List<MovieDTO> getAllDanishMovies() {
         ObjectMapper objectMapper = new ObjectMapper();
