@@ -17,9 +17,10 @@ import java.util.Optional;
 public class Main {
     public static void main(String[] args) {
         EntityManagerFactory emf = HibernateConfig.getEntityManagerFactory();
-        MovieService movieService = new MovieService();
         MovieDAO movieDAO = new MovieDAO(emf);
         GenreDAO genreDAO = new GenreDAO(emf);
+
+        MovieService movieService = new MovieService(movieDAO);
 
 
 
