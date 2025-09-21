@@ -1,7 +1,9 @@
 package app.persistence;
 
+
 import app.entities.Actor;
 import app.entities.Director;
+
 import app.entities.Movie;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -13,21 +15,10 @@ import java.util.Optional;
 import java.util.Set;
 
 public class MovieDAO {
-    private EntityManagerFactory emf;
+    private final EntityManagerFactory emf;
 
     public MovieDAO(EntityManagerFactory emf) {
         this.emf = emf;
-    }
-
-
-    public Movie findById(int id) {
-        try (EntityManager em = emf.createEntityManager()) {
-            Movie foundMovie = em.find(Movie.class, id);
-            return foundMovie;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
     }
 
 
@@ -73,19 +64,24 @@ public class MovieDAO {
         }
     }
 
+
     // Bruges til MoviePopulator for at undgå EntityExistsException på detached entiteter
     public Movie merge(Movie movie) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            Movie mergedMovie = em.merge(movie);
+            Movie managed = em.merge(movie);
             em.getTransaction().commit();
-
-            return mergedMovie;
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            return managed;
         }
     }
+
+    public Movie findById(int id) {
+        try (EntityManager em = emf.createEntityManager()) {
+
+            return em.find(Movie.class, id);
+        }
+    }
+
 
     // Opgave 2
     public List<Movie> getAllMovies() {
@@ -95,8 +91,6 @@ public class MovieDAO {
             return movieList;
         }
     }
-
-    //Opgave 3
 
 
     //Opgave 5.1
@@ -117,12 +111,10 @@ public class MovieDAO {
         }
     }
 
-    //Opgave 5.2
     public Movie updateTitleAndReleaseDate(Integer movieId, String newTitle, LocalDate newReleaseDate) {
-        Movie movie;
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
-            movie = em.find(Movie.class, movieId);
+            Movie movie = em.find(Movie.class, movieId);
             if (movie == null) {
                 throw new IllegalArgumentException("Movie with id " + movieId + " does not exist");
             }
@@ -130,20 +122,17 @@ public class MovieDAO {
             movie.setReleaseDate(newReleaseDate);
             em.merge(movie);
             em.getTransaction().commit();
+            return movie;
         }
-        return movie;
     }
 
-
-    //Opgave 4.2
     public List<Movie> getMoviesByGenre(String genre) {
         try (EntityManager em = emf.createEntityManager()) {
-            List<Movie> movieList = em.createQuery("SELECT m FROM Movie m " +
-                            "JOIN m.genres g " +
-                            "WHERE g.name LIKE :genre", Movie.class)
-                    .setParameter("genre", genre)
+            return em.createQuery(
+                            "SELECT m FROM Movie m JOIN m.genres g WHERE g.name LIKE :genre",
+                            Movie.class
+                    ).setParameter("genre", genre)
                     .getResultList();
-            return movieList;
         }
     }
 
