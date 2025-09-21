@@ -51,6 +51,7 @@ public class ActorDAO {
                 .setParameter("id", tmdbId)
                 .getResultList();
         return list.isEmpty() ? null : list.get(0);
+    }
 
     public Actor findActorByImdbId(int tmdbId) {
         try (EntityManager em = emf.createEntityManager()) {

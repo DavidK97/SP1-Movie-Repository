@@ -22,7 +22,6 @@ public class MovieDAO {
     }
 
 
-
     public Movie create(Movie movie) {
         try (EntityManager em = emf.createEntityManager()) {
             em.getTransaction().begin();
@@ -66,7 +65,6 @@ public class MovieDAO {
     }
 
 
-
     // Bruges til MoviePopulator for at undgå EntityExistsException på detached entiteter
     public Movie merge(Movie movie) {
         try (EntityManager em = emf.createEntityManager()) {
@@ -84,18 +82,15 @@ public class MovieDAO {
         }
     }
 
-   
 
     // Opgave 2
     public List<Movie> getAllMovies() {
         try (EntityManager em = emf.createEntityManager()) {
             List<Movie> movieList = em.createQuery("SELECT m FROM Movie m", Movie.class)
                     .getResultList();
+            return movieList;
         }
     }
-
-
-
 
 
     //Opgave 5.1
